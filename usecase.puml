@@ -1,0 +1,23 @@
+@startuml
+
+left to right direction
+
+actor Aluno
+actor Explicador
+actor Administrador
+
+rectangle System{
+    Aluno --> (Pesquisa Explicador)
+    Aluno --> (Marca Explicação)    
+    Aluno --> (Desmarca Explicação)
+    Explicador --> (Insere Informação)
+    (Insere Informação) <|--  (Insere disponibilidade)
+    Explicador --> (Consulta Explicações marcadas)
+    (Insere Informação) <|--(Inserir cadeiras que pode explicar)
+    Administrador --> (Insere faculdades)
+    Administrador --> (Insere cursos)
+    Administrador --> (Insere cadeiras)
+    
+}
+
+@enduml
