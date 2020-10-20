@@ -7,6 +7,7 @@ public class Disponibilidade {
     private DayOfWeek diaDaSemana;
     private LocalTime horaInicio;
     private LocalTime horaFim;
+    private Explicador explicador;
 
     protected boolean estaDisponivel(Explicacao explicacao){
         return false;
