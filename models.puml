@@ -1,0 +1,44 @@
+@startuml
+left to right direction
+class Explicacao{
+    - hora:LocalDateTime
+    # temMarcacaoPrevia(e:Explicacao):boolean
+}
+class Utilizador{
+    - nome:String
+}
+class Aluno{
+    + adicionaExplicacao(e:Explicacao)
+}
+class Explicador{
+    + adicionaExplicacao(e:Explicacao)
+    - estaDisponivel(e:Explicacao):boolean
+    - temMarcacaoPrevia(e:Explicacao):boolean
+}
+class Disponibilidade{
+    - diaDaSemana:DayOfWeek
+    - horaInicio:LocalTime
+    - horaFim:LocalTime
+    # estaDisponivel(e:Explicacao):boolean
+}
+class Faculdade{
+    - nome:String
+}
+class Curso{
+    - nome:String
+}
+
+class Cadeira{
+    - nome:String
+}
+
+Aluno --|> Utilizador
+Explicador --|> Utilizador
+Explicador "1" --- "*" Explicacao
+Aluno "1" --- "*" Explicacao
+Explicador "*" -- "*" Cadeira
+Explicador "1" -- "*" Disponibilidade
+Curso "1" -- "*" Cadeira
+Faculdade "1" -- "*"Curso
+
+@enduml
