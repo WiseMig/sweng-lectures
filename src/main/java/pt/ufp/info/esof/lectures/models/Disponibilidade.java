@@ -4,15 +4,21 @@ import edu.princeton.cs.algorithms.EdgeWeightedDigraph;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 @Getter
 @Setter
+@Entity
 public class Disponibilidade {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private DayOfWeek diaDaSemana;
     private LocalTime horaInicio;
     private LocalTime horaFim;
+    @ManyToOne
     private Explicador explicador;
 
     protected boolean estaDisponivel(Explicacao explicacao){

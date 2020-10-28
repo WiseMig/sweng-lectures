@@ -3,14 +3,22 @@ package pt.ufp.info.esof.lectures.models;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
 @Setter
+@Entity
 public class Explicacao {
+    @Id
+    private Long id;
     private LocalDateTime hora;
+    @ManyToOne
     private Explicador explicador;
+    @ManyToOne
     private Aluno aluno;
 
     public boolean temMarcacaoPrevia(Explicacao explicacao){

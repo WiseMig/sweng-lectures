@@ -3,15 +3,23 @@ package pt.ufp.info.esof.lectures.models;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@Entity
 public class Explicador extends Utilizador{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String email;
+    @ManyToMany(mappedBy = "explicadores")
     private final List<Cadeira> cadeiras=new ArrayList<>();
-    private final List<Disponibilidade> disponibilidades=new ArrayList<>();
+    @OneToMany(mappedBy = "explicador",cascade = CascadeType.ALL)
+    private List<Disponibilidade> disponibilidades=new ArrayList<>();
+    @OneToMany(mappedBy = "explicador")
     private final List<Explicacao> explicacoes=new ArrayList<>();
 
     public Explicacao adicionarExplicacao(Explicacao explicacao){
@@ -48,4 +56,7 @@ public class Explicador extends Utilizador{
         }
     }
 
+    public void setDisponibilidades(List<Disponibilidade> asList) {
+        this.disponibilidades=asList;
+    }
 }
