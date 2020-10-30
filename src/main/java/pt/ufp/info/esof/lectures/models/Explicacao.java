@@ -3,9 +3,7 @@ package pt.ufp.info.esof.lectures.models;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -14,6 +12,7 @@ import java.time.LocalTime;
 @Entity
 public class Explicacao {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDateTime hora;
     @ManyToOne

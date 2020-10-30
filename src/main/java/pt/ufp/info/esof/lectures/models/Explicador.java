@@ -19,7 +19,7 @@ public class Explicador extends Utilizador{
     private final List<Cadeira> cadeiras=new ArrayList<>();
     @OneToMany(mappedBy = "explicador",cascade = CascadeType.ALL)
     private List<Disponibilidade> disponibilidades=new ArrayList<>();
-    @OneToMany(mappedBy = "explicador")
+    @OneToMany(mappedBy = "explicador",cascade = CascadeType.ALL)
     private final List<Explicacao> explicacoes=new ArrayList<>();
 
     public Explicacao adicionarExplicacao(Explicacao explicacao){
@@ -54,9 +54,5 @@ public class Explicador extends Utilizador{
             this.disponibilidades.add(disponibilidade);
             disponibilidade.setExplicador(this);
         }
-    }
-
-    public void setDisponibilidades(List<Disponibilidade> asList) {
-        this.disponibilidades=asList;
     }
 }
