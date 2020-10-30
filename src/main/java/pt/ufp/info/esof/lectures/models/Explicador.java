@@ -16,11 +16,11 @@ public class Explicador extends Utilizador{
     private Long id;
     private String email;
     @ManyToMany(mappedBy = "explicadores")
-    private final List<Cadeira> cadeiras=new ArrayList<>();
+    private List<Cadeira> cadeiras=new ArrayList<>();
     @OneToMany(mappedBy = "explicador",cascade = CascadeType.ALL)
     private List<Disponibilidade> disponibilidades=new ArrayList<>();
-    @OneToMany(mappedBy = "explicador")
-    private final List<Explicacao> explicacoes=new ArrayList<>();
+    @OneToMany(mappedBy = "explicador",cascade = CascadeType.ALL)
+    private List<Explicacao> explicacoes=new ArrayList<>();
 
     public Explicacao adicionarExplicacao(Explicacao explicacao){
         if(estaDisponivel(explicacao)&&!temMarcacaoPrevia(explicacao)){
@@ -54,9 +54,5 @@ public class Explicador extends Utilizador{
             this.disponibilidades.add(disponibilidade);
             disponibilidade.setExplicador(this);
         }
-    }
-
-    public void setDisponibilidades(List<Disponibilidade> asList) {
-        this.disponibilidades=asList;
     }
 }
