@@ -5,9 +5,9 @@ import java.util.List;
 
 public class Explicador extends Utilizador{
     private String email;
-    private final List<Cadeira> cadeiras=new ArrayList<>();
-    private final List<Disponibilidade> disponibilidades=new ArrayList<>();
-    private final List<Explicacao> explicacoes=new ArrayList<>();
+    private List<Cadeira> cadeiras=new ArrayList<>();
+    private List<Disponibilidade> disponibilidades=new ArrayList<>();
+    private List<Explicacao> explicacoes=new ArrayList<>();
 
     public Explicacao adicionarExplicacao(Explicacao explicacao){
         return null;
