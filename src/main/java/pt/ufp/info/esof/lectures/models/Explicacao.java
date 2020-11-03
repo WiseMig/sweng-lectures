@@ -1,5 +1,6 @@
 package pt.ufp.info.esof.lectures.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,7 @@ public class Explicacao {
     private Long id;
     private LocalDateTime hora;
     @ManyToOne
+    @JsonIgnore
     private Explicador explicador;
     @ManyToOne
     private Aluno aluno;

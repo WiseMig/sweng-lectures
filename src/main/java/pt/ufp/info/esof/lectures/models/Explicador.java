@@ -1,11 +1,15 @@
 package pt.ufp.info.esof.lectures.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -15,12 +19,20 @@ public class Explicador extends Utilizador{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
+    @JsonIgnore
     @ManyToMany(mappedBy = "explicadores")
     private final List<Cadeira> cadeiras=new ArrayList<>();
+    @JsonIgnore
     @OneToMany(mappedBy = "explicador",cascade = CascadeType.ALL)
     private List<Disponibilidade> disponibilidades=new ArrayList<>();
+
     @OneToMany(mappedBy = "explicador",cascade = CascadeType.ALL)
     private final List<Explicacao> explicacoes=new ArrayList<>();
+
+    @JsonProperty(value = "nomeCadeiras")
+    public List<String> teste(){
+        return cadeiras.stream().map(Cadeira::getNome).collect(Collectors.toList());
+    }
 
     public Explicacao adicionarExplicacao(Explicacao explicacao){
         if(estaDisponivel(explicacao)&&!temMarcacaoPrevia(explicacao)){
@@ -29,6 +41,13 @@ public class Explicador extends Utilizador{
             return explicacao;
         }
         return null;
+    }
+
+    public void adicionaCadeira(Cadeira cadeira){
+        if(!this.cadeiras.contains(cadeira)){
+            this.cadeiras.add(cadeira);
+            cadeira.adicionaExplicador(this);
+        }
     }
 
     private boolean estaDisponivel(Explicacao explicacao){

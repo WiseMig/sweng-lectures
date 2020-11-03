@@ -1,5 +1,6 @@
 package pt.ufp.info.esof.lectures.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,7 @@ public class Aluno extends Utilizador{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToMany(mappedBy = "aluno")
+    @JsonIgnore
     private final List<Explicacao> explicacoes=new ArrayList<>();
 
     public void addExplicacao(Explicacao explicacao){
