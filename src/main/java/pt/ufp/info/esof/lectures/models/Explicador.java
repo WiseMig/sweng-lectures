@@ -31,6 +31,13 @@ public class Explicador extends Utilizador{
         return null;
     }
 
+    public void adicionaCadeira(Cadeira cadeira){
+        if(!this.cadeiras.contains(cadeira)){
+            this.cadeiras.add(cadeira);
+            cadeira.adicionaExplicador(this);
+        }
+    }
+
     private boolean estaDisponivel(Explicacao explicacao){
         for(Disponibilidade disponibilidade:disponibilidades){
             if(disponibilidade.estaDisponivel(explicacao)){
