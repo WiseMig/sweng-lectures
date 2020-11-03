@@ -18,7 +18,7 @@ public class Faculdade {
     @OneToMany(mappedBy = "faculdade",cascade = CascadeType.ALL)
     private List<Curso> cursos=new ArrayList<>();
 
-    public void addCurso(Curso curso){
+    public void adicionaCurso(Curso curso){
         if(!this.cursos.contains(curso)){
             cursos.add(curso);
             curso.setFaculdade(this);

@@ -46,9 +46,9 @@ public class Inicializacao implements ApplicationListener<ContextRefreshedEvent>
         Cadeira esof=new Cadeira();
         esof.setNome("Engenharia de Software");
 
-        engenhariaInformatica.addCadeira(matematicaInformatica);
-        engenhariaInformatica.addCadeira(fisicaInformatica);
-        engenhariaInformatica.addCadeira(esof);
+        engenhariaInformatica.adicionaCadeira(matematicaInformatica);
+        engenhariaInformatica.adicionaCadeira(fisicaInformatica);
+        engenhariaInformatica.adicionaCadeira(esof);
 
         Curso engenhariaCivil=new Curso();
         engenhariaCivil.setNome("Engenharia Civil");
@@ -59,11 +59,11 @@ public class Inicializacao implements ApplicationListener<ContextRefreshedEvent>
         Cadeira fisica=new Cadeira();
         fisica.setNome("Física");
 
-        engenhariaCivil.addCadeira(matematica);
-        engenhariaCivil.addCadeira(fisica);
+        engenhariaCivil.adicionaCadeira(matematica);
+        engenhariaCivil.adicionaCadeira(fisica);
 
-        fct.addCurso(engenhariaInformatica);
-        fct.addCurso(engenhariaCivil);
+        fct.adicionaCurso(engenhariaInformatica);
+        fct.adicionaCurso(engenhariaCivil);
 
         this.faculdadeRepository.save(fct);
 
@@ -86,16 +86,17 @@ public class Inicializacao implements ApplicationListener<ContextRefreshedEvent>
         ));
 
         Aluno aluno=new Aluno();
-        alunoRepository.save(aluno);
+        this.alunoRepository.save(aluno);
 
         aluno.addExplicacao(explicacao);
         explicador.adicionarExplicacao(explicacao);
 
         explicador.adicionaCadeira(esof);
+        explicador.adicionaCadeira(matematicaInformatica);
 
-        explicadorRepository.save(explicador);
-        cadeiraRepository.save(esof);
-
+        this.explicadorRepository.save(explicador);
+        this.cadeiraRepository.save(esof);
+        this.cadeiraRepository.save(matematicaInformatica);
 
     }
 }

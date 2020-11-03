@@ -2,10 +2,11 @@ package pt.ufp.info.esof.lectures.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import pt.ufp.info.esof.lectures.models.Explicador;
 import pt.ufp.info.esof.lectures.repositories.ExplicadorRepository;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/explicador")
@@ -19,5 +20,22 @@ public class ExplicadorController {
     @GetMapping()
     public ResponseEntity<Iterable<Explicador>> getAllExplicador(){
         return ResponseEntity.ok(explicadorRepository.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Explicador> getExplicadorById(@PathVariable Long id){
+        Optional<Explicador> optionalExplicador=explicadorRepository.findById(id);
+        if(optionalExplicador.isPresent()){
+            return ResponseEntity.ok(optionalExplicador.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping()
+    public ResponseEntity<Explicador> createExplicador(@RequestBody Explicador explicador){
+        if(explicadorRepository.findByEmail(explicador.getEmail())==null){
+           return ResponseEntity.ok(explicadorRepository.save(explicador));
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

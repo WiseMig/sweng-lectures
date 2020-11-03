@@ -20,7 +20,7 @@ public class Curso {
     @ManyToOne
     private Faculdade faculdade;
 
-    public void addCadeira(Cadeira cadeira){
+    public void adicionaCadeira(Cadeira cadeira){
         if(!this.cadeiras.contains(cadeira)){
             cadeiras.add(cadeira);
             cadeira.setCurso(this);
