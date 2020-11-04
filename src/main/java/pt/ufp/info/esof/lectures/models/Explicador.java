@@ -22,6 +22,13 @@ public class Explicador extends Utilizador{
     @OneToMany(mappedBy = "explicador",cascade = CascadeType.ALL)
     private List<Explicacao> explicacoes=new ArrayList<>();
 
+    public void setDisponibilidades(List<Disponibilidade> disponibilidades) {
+        for(Disponibilidade disponibilidade:disponibilidades){
+            this.disponibilidades.add(disponibilidade);
+            disponibilidade.setExplicador(this);
+        }
+    }
+
     public Explicacao adicionarExplicacao(Explicacao explicacao){
         if(estaDisponivel(explicacao)&&!temMarcacaoPrevia(explicacao)){
             this.explicacoes.add(explicacao);

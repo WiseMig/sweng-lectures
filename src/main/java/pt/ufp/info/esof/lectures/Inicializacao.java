@@ -76,6 +76,7 @@ public class Inicializacao implements ApplicationListener<ContextRefreshedEvent>
         disponibilidade.setHoraInicio(LocalTime.of(8,0));
         disponibilidade.setHoraFim(disponibilidade.getHoraInicio().plusHours(3));
 
+        //explicador.adicionaDisponibilidade(disponibilidade);
         explicador.setDisponibilidades(Collections.singletonList(disponibilidade));
 
         Explicacao explicacao=new Explicacao();
