@@ -63,9 +63,14 @@
 
         <!-- https://mvnrepository.com/artifact/com.googlecode.princeton-java-algorithms/algorithms -->
         <dependency>
-            <groupId>com.googlecode.princeton-java-algorithms</groupId>
-            <artifactId>algorithms</artifactId>
-            <version>4.0.1</version>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
 
     </dependencies>

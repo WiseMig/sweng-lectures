@@ -1,8 +1,10 @@
 package pt.ufp.info.esof.lectures.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,13 +13,17 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode
 public class Explicacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    //https://www.javacodemonk.com/java-8-date-time-json-formatting-with-jackson-5fe5ff13
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm",shape = JsonFormat.Shape.STRING)
     private LocalDateTime hora;
+
     @ManyToOne
-    @JsonIgnore
     private Explicador explicador;
     @ManyToOne
     private Aluno aluno;
@@ -38,4 +44,5 @@ public class Explicacao {
                             horaInicioExplicacao2.isAfter(horaFimExplicacao1)
                 );
     }
+
 }

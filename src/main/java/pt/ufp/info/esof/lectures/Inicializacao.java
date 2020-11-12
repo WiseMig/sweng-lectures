@@ -1,5 +1,8 @@
 package pt.ufp.info.esof.lectures;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -27,6 +30,7 @@ public class Inicializacao implements ApplicationListener<ContextRefreshedEvent>
     @Autowired
     private CadeiraRepository cadeiraRepository;
 
+    @SneakyThrows
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         System.out.println("\n\n\nInicializou\n\n\n");
@@ -76,7 +80,7 @@ public class Inicializacao implements ApplicationListener<ContextRefreshedEvent>
         disponibilidade.setHoraInicio(LocalTime.of(8,0));
         disponibilidade.setHoraFim(disponibilidade.getHoraInicio().plusHours(3));
 
-        explicador.setDisponibilidades(Collections.singletonList(disponibilidade));
+        explicador.adicionaDisponibilidade(disponibilidade);
 
         Explicacao explicacao=new Explicacao();
         explicacao.setExplicador(explicador);
@@ -97,6 +101,5 @@ public class Inicializacao implements ApplicationListener<ContextRefreshedEvent>
         this.explicadorRepository.save(explicador);
         this.cadeiraRepository.save(esof);
         this.cadeiraRepository.save(matematicaInformatica);
-
     }
 }

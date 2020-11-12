@@ -3,6 +3,7 @@ package pt.ufp.info.esof.lectures.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode(callSuper = true)
 public class Explicador extends Utilizador{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +27,7 @@ public class Explicador extends Utilizador{
     @JsonIgnore
     @OneToMany(mappedBy = "explicador",cascade = CascadeType.ALL)
     private List<Disponibilidade> disponibilidades=new ArrayList<>();
-
+    @JsonIgnore
     @OneToMany(mappedBy = "explicador",cascade = CascadeType.ALL)
     private final List<Explicacao> explicacoes=new ArrayList<>();
 

@@ -1,6 +1,7 @@
 package pt.ufp.info.esof.lectures.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -9,9 +10,12 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import pt.ufp.info.esof.lectures.models.Disponibilidade;
 import pt.ufp.info.esof.lectures.models.Explicador;
 import pt.ufp.info.esof.lectures.repositories.ExplicadorRepository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +34,9 @@ class ExplicadorControllerTest {
 
     @MockBean
     private ExplicadorRepository explicadorRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     void getAllExplicador() throws Exception {
@@ -81,6 +88,44 @@ class ExplicadorControllerTest {
         when(this.explicadorRepository.findByEmail("explicador@mail.com")).thenReturn(explicadorExistente);
 
         mockMvc.perform(post("/explicador").content(explicadorExistenteAsJsonString).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void adicionaDisponibilidade() throws Exception {
+
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        Explicador explicador=new Explicador();
+        explicador.setEmail("novoexplicador@mail.com");
+
+        Disponibilidade disponibilidade=new Disponibilidade();
+
+        disponibilidade.setDiaDaSemana(LocalDate.now().getDayOfWeek());
+        disponibilidade.setHoraInicio(LocalTime.of(8,0));
+        disponibilidade.setHoraFim(disponibilidade.getHoraInicio().plusHours(3));
+
+        String disponibilidadeJson=objectMapper.writeValueAsString(disponibilidade);
+
+        when(explicadorRepository.findById(1L)).thenReturn(Optional.of(explicador));
+
+        mockMvc.perform(
+                patch("/explicador/1")
+                        .content(disponibilidadeJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk());
+
+        mockMvc.perform(
+                patch("/explicador/1")
+                        .content(disponibilidadeJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                patch("/explicador/2")
+                        .content(disponibilidadeJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isBadRequest());
 
     }
 }
