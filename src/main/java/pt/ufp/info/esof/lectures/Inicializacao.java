@@ -18,14 +18,22 @@ import java.util.Collections;
 @Component
 public class Inicializacao implements ApplicationListener<ContextRefreshedEvent> {
 
-    @Autowired
+    //@Autowired
     private ExplicadorRepository explicadorRepository;
-    @Autowired
+    //@Autowired
     private AlunoRepository alunoRepository;
-    @Autowired
+    //@Autowired
     private FaculdadeRepository faculdadeRepository;
-    @Autowired
+    //@Autowired
     private CadeiraRepository cadeiraRepository;
+
+    @Autowired
+    public Inicializacao(ExplicadorRepository explicadorRepository, AlunoRepository alunoRepository, FaculdadeRepository faculdadeRepository, CadeiraRepository cadeiraRepository) {
+        this.explicadorRepository = explicadorRepository;
+        this.alunoRepository = alunoRepository;
+        this.faculdadeRepository = faculdadeRepository;
+        this.cadeiraRepository = cadeiraRepository;
+    }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {

@@ -67,7 +67,7 @@ class ExplicadorRepositoryTest {
         assertEquals(1,explicadorRepository.count());
         assertEquals(1,disponibilidadeRepository.count());
         assertNotNull(explicadorRepository.findByEmail("explicador@gmail.com"));
-        assertNull(explicadorRepository.findByEmail("invalid email"));
+        assertTrue(explicadorRepository.findByEmail("invalid email").isEmpty());
 
         assertEquals(1,explicacaoRepository.count());
 

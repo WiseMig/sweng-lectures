@@ -1,18 +1,17 @@
 package pt.ufp.info.esof.lectures.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import pt.ufp.info.esof.lectures.models.Explicador;
 import pt.ufp.info.esof.lectures.repositories.ExplicadorRepository;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,54 +32,74 @@ class ExplicadorControllerTest {
 
     @Test
     void getAllExplicador() throws Exception {
-        Explicador explicador1=new Explicador();
-        Explicador explicador2=new Explicador();
-        Explicador explicador3=new Explicador();
 
-        List<Explicador> explicadores= Arrays.asList(explicador1,explicador2,explicador3);
+        List<Explicador> explicadores=new ArrayList<>();
+        explicadores.add(new Explicador());
 
-        String listExplicadoresAsJsonString=new ObjectMapper().writeValueAsString(explicadores);
+        when(explicadorRepository.findAll())
+                .thenReturn(explicadores);
 
-        when(explicadorRepository.findAll()).thenReturn(explicadores);
 
-        String httpResponseAsString=mockMvc.perform(get("/explicador")).andDo(print()).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        assertNotNull(httpResponseAsString);
+        String responseJson=mockMvc.perform(
+                get("/explicador")
+        ).andExpect(
+                status().isOk()
+        ).andDo(
+                print()
+        ).andReturn().getResponse().getContentAsString();
 
-        assertEquals(listExplicadoresAsJsonString,httpResponseAsString);
+        System.out.println(responseJson);
 
     }
 
     @Test
     void getExplicadorById() throws Exception {
-        Explicador explicador=new Explicador();
-        String explicadorAsJsonString=new ObjectMapper().writeValueAsString(explicador);
 
-        when(explicadorRepository.findById(1L)).thenReturn(Optional.of(explicador));
 
-        String httpResponseAsString=mockMvc.perform(get("/explicador/1")).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        assertNotNull(httpResponseAsString);
-        assertEquals(explicadorAsJsonString,httpResponseAsString);
+        when(explicadorRepository.findById(1L)).thenReturn(Optional.of(new Explicador()));
 
-        mockMvc.perform(get("/explicador/2")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/explicador/1"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/explicador/10"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    void createExplicador() throws Exception {
+    void criarExplicador() throws Exception {
+
         Explicador explicador=new Explicador();
-        explicador.setEmail("novoexplicador@mail.com");
+        explicador.setEmail("mail");
 
-        when(this.explicadorRepository.save(explicador)).thenReturn(explicador);
+        ObjectMapper objectMapper=new ObjectMapper();
+        String explicadorJson=objectMapper.writeValueAsString(explicador);
 
-        String explicadorAsJsonString=new ObjectMapper().writeValueAsString(explicador);
+        when(explicadorRepository.findByEmail("mail")).thenReturn(Optional.of(new Explicador()));
 
-        mockMvc.perform(post("/explicador").content(explicadorAsJsonString).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        mockMvc.perform(
+                post("/explicador").content(explicadorJson).contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                status().isBadRequest()
+        );
 
-        Explicador explicadorExistente=new Explicador();
-        explicadorExistente.setEmail("explicador@mail.com");
-        String explicadorExistenteAsJsonString=new ObjectMapper().writeValueAsString(explicadorExistente);
-        when(this.explicadorRepository.findByEmail("explicador@mail.com")).thenReturn(explicadorExistente);
+        Explicador nonExistentExplicador=new Explicador();
+        nonExistentExplicador.setEmail("newMail");
 
-        mockMvc.perform(post("/explicador").content(explicadorExistenteAsJsonString).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+        String nonExistentExplicadorJson=objectMapper.writeValueAsString(nonExistentExplicador);
+
+        mockMvc.perform(
+                post("/explicador").content(nonExistentExplicadorJson).contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                status().isOk()
+        );
+
+        mockMvc.perform(
+                post("/explicador").content(objectMapper.writeValueAsString(new Explicador())).contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                status().isBadRequest()
+        );
+
+
 
     }
 }
