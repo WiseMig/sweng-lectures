@@ -1,10 +1,8 @@
 package pt.ufp.info.esof.lectures.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.DayOfWeek;
@@ -19,11 +17,7 @@ public class Disponibilidade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private DayOfWeek diaDaSemana;
-
-    @JsonFormat(pattern = "HH:mm",shape = JsonFormat.Shape.STRING)
     private LocalTime horaInicio;
-
-    @JsonFormat(pattern = "HH:mm",shape = JsonFormat.Shape.STRING)
     private LocalTime horaFim;
 
     @ManyToOne

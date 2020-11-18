@@ -19,7 +19,6 @@ public class Aluno extends Utilizador{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToMany(mappedBy = "aluno")
-    @JsonIgnore
     private final List<Explicacao> explicacoes=new ArrayList<>();
 
     public void addExplicacao(Explicacao explicacao){

@@ -1,28 +1,23 @@
 package pt.ufp.info.esof.lectures.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import pt.ufp.info.esof.lectures.dtos.MarcarAtendimentoDTO;
 import pt.ufp.info.esof.lectures.models.Aluno;
-import pt.ufp.info.esof.lectures.models.Disponibilidade;
 import pt.ufp.info.esof.lectures.models.Explicacao;
 import pt.ufp.info.esof.lectures.models.Explicador;
-import pt.ufp.info.esof.lectures.repositories.AlunoRepository;
-import pt.ufp.info.esof.lectures.repositories.ExplicacaoRepository;
-import pt.ufp.info.esof.lectures.repositories.ExplicadorRepository;
+import pt.ufp.info.esof.lectures.services.ExplicacaoService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,51 +29,39 @@ class ExplicacaoControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ExplicacaoRepository explicacaoRepository;
-    @MockBean
-    private ExplicadorRepository explicadorRepository;
-    @MockBean
-    private AlunoRepository alunoRepository;
+    private ExplicacaoService explicacaoService;
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
     void marcaAtendimento() throws Exception {
 
-        Aluno aluno=new Aluno();
-        aluno.setId(1L);
 
-        Disponibilidade disponibilidade=new Disponibilidade();
-        disponibilidade.setHoraInicio(LocalTime.of(8,0));
-        disponibilidade.setHoraFim(LocalTime.of(12,0));
-        disponibilidade.setDiaDaSemana(LocalDate.now().getDayOfWeek());
+       Aluno aluno=new Aluno();
+       aluno.setId(1L);
 
-        Explicador explicador=new Explicador();
-        explicador.adicionaDisponibilidade(disponibilidade);
-        explicador.setId(1L);
+       Explicador explicador=new Explicador();
+       explicador.setId(1L);
 
-        Explicacao explicacao=new Explicacao();
-        explicacao.setHora(LocalDateTime.of(
+       Explicacao explicacao=new Explicacao();
+       explicacao.setExplicador(explicador);
+       explicacao.setAluno(aluno);
+
+        MarcarAtendimentoDTO atendimentoDTO=new MarcarAtendimentoDTO();
+        atendimentoDTO.setHora(LocalDateTime.of(
                 LocalDate.now(),
                 LocalTime.of(8,0)
         ));
 
-        explicacao.setExplicador(explicador);
-        explicacao.setAluno(aluno);
+        atendimentoDTO.setExplicadorId(1L);
+        atendimentoDTO.setAlunoId(1L);
 
-        when(alunoRepository.findById(1L)).thenReturn(Optional.of(aluno));
-        when(explicadorRepository.findById(1L)).thenReturn(Optional.of(explicador));
-        when(explicacaoRepository.save(explicacao)).thenReturn(explicacao);
+        when(explicacaoService.marcarAtendimento(atendimentoDTO.converter())).thenReturn(Optional.of(explicacao));
 
-        String explicacaoJson=objectMapper.writeValueAsString(explicacao);
+        String explicacaoJson=objectMapper.writeValueAsString(atendimentoDTO);
 
         mockMvc.perform(post("/explicacao").contentType(MediaType.APPLICATION_JSON).content(explicacaoJson))
                 .andExpect(status().isOk());
-
-        mockMvc.perform(post("/explicacao").contentType(MediaType.APPLICATION_JSON).content(explicacaoJson))
-                .andExpect(status().isBadRequest());
-
-
 
     }
 }

@@ -1,18 +1,15 @@
 package pt.ufp.info.esof.lectures.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import pt.ufp.info.esof.lectures.models.Disponibilidade;
+import pt.ufp.info.esof.lectures.dtos.DisponibilidadeCreateDTO;
 import pt.ufp.info.esof.lectures.models.Explicador;
-import pt.ufp.info.esof.lectures.repositories.ExplicadorRepository;
+import pt.ufp.info.esof.lectures.services.ExplicadorService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -33,7 +30,7 @@ class ExplicadorControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ExplicadorRepository explicadorRepository;
+    private ExplicadorService explicadorService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -46,14 +43,11 @@ class ExplicadorControllerTest {
 
         List<Explicador> explicadores= Arrays.asList(explicador1,explicador2,explicador3);
 
-        String listExplicadoresAsJsonString=new ObjectMapper().writeValueAsString(explicadores);
-
-        when(explicadorRepository.findAll()).thenReturn(explicadores);
+        when(explicadorService.findAll()).thenReturn(explicadores);
 
         String httpResponseAsString=mockMvc.perform(get("/explicador")).andDo(print()).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertNotNull(httpResponseAsString);
 
-        assertEquals(listExplicadoresAsJsonString,httpResponseAsString);
 
     }
 
@@ -62,11 +56,10 @@ class ExplicadorControllerTest {
         Explicador explicador=new Explicador();
         String explicadorAsJsonString=new ObjectMapper().writeValueAsString(explicador);
 
-        when(explicadorRepository.findById(1L)).thenReturn(Optional.of(explicador));
+        when(explicadorService.findById(1L)).thenReturn(Optional.of(explicador));
 
         String httpResponseAsString=mockMvc.perform(get("/explicador/1")).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         assertNotNull(httpResponseAsString);
-        assertEquals(explicadorAsJsonString,httpResponseAsString);
 
         mockMvc.perform(get("/explicador/2")).andExpect(status().isNotFound());
     }
@@ -76,7 +69,7 @@ class ExplicadorControllerTest {
         Explicador explicador=new Explicador();
         explicador.setEmail("novoexplicador@mail.com");
 
-        when(this.explicadorRepository.save(explicador)).thenReturn(explicador);
+        when(this.explicadorService.createExplicador(explicador)).thenReturn(Optional.of(explicador));
 
         String explicadorAsJsonString=new ObjectMapper().writeValueAsString(explicador);
 
@@ -85,7 +78,6 @@ class ExplicadorControllerTest {
         Explicador explicadorExistente=new Explicador();
         explicadorExistente.setEmail("explicador@mail.com");
         String explicadorExistenteAsJsonString=new ObjectMapper().writeValueAsString(explicadorExistente);
-        when(this.explicadorRepository.findByEmail("explicador@mail.com")).thenReturn(Optional.of(explicadorExistente));
 
         mockMvc.perform(post("/explicador").content(explicadorExistenteAsJsonString).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
 
@@ -97,27 +89,21 @@ class ExplicadorControllerTest {
         Explicador explicador=new Explicador();
         explicador.setEmail("novoexplicador@mail.com");
 
-        Disponibilidade disponibilidade=new Disponibilidade();
+        DisponibilidadeCreateDTO disponibilidade=new DisponibilidadeCreateDTO();
 
-        disponibilidade.setDiaDaSemana(LocalDate.now().getDayOfWeek());
+        disponibilidade.setDia(LocalDate.now().getDayOfWeek());
         disponibilidade.setHoraInicio(LocalTime.of(8,0));
         disponibilidade.setHoraFim(disponibilidade.getHoraInicio().plusHours(3));
 
         String disponibilidadeJson=objectMapper.writeValueAsString(disponibilidade);
 
-        when(explicadorRepository.findById(1L)).thenReturn(Optional.of(explicador));
+        when(explicadorService.adicionaDisponibilidade(1L,disponibilidade.converter())).thenReturn(Optional.of(explicador));
 
         mockMvc.perform(
                 patch("/explicador/1")
                         .content(disponibilidadeJson)
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
-
-        mockMvc.perform(
-                patch("/explicador/1")
-                        .content(disponibilidadeJson)
-                        .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isBadRequest());
 
         mockMvc.perform(
                 patch("/explicador/2")

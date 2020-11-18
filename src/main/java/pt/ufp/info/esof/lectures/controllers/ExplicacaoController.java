@@ -1,16 +1,14 @@
 package pt.ufp.info.esof.lectures.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import pt.ufp.info.esof.lectures.models.Aluno;
+import pt.ufp.info.esof.lectures.dtos.conversores.ConverterExplicacaoParaDTO;
+import pt.ufp.info.esof.lectures.dtos.MarcarAtendimentoDTO;
 import pt.ufp.info.esof.lectures.models.Explicacao;
-import pt.ufp.info.esof.lectures.models.Explicador;
-import pt.ufp.info.esof.lectures.repositories.AlunoRepository;
-import pt.ufp.info.esof.lectures.repositories.ExplicadorRepository;
+import pt.ufp.info.esof.lectures.services.ExplicacaoService;
 
 import java.util.Optional;
 
@@ -18,29 +16,15 @@ import java.util.Optional;
 @RequestMapping("/explicacao")
 public class ExplicacaoController {
 
-    private final ExplicadorRepository explicadorRepository;
-    private final AlunoRepository alunoRepository;
-
-    @Autowired
-    public ExplicacaoController(ExplicadorRepository explicadorRepository, AlunoRepository alunoRepository) {
-        this.explicadorRepository = explicadorRepository;
-        this.alunoRepository = alunoRepository;
+    private final ExplicacaoService explicacaoService;
+    private final ConverterExplicacaoParaDTO converterExplicacaoParaDTO=new ConverterExplicacaoParaDTO();
+    public ExplicacaoController(ExplicacaoService explicacaoService) {
+        this.explicacaoService = explicacaoService;
     }
 
     @PostMapping
-    public ResponseEntity<Explicacao> marcaAtendimento(@RequestBody Explicacao explicacao){
-        Optional<Explicador> optionalExplicador=explicadorRepository.findById(explicacao.getExplicador().getId());
-        Optional<Aluno> optionalAluno=alunoRepository.findById(explicacao.getAluno().getId());
-        if(optionalAluno.isPresent()&&optionalExplicador.isPresent()){
-            Explicador explicador=optionalExplicador.get();
-            Aluno aluno=optionalAluno.get();
-            if(explicador.adicionarExplicacao(explicacao)!=null){
-                aluno.addExplicacao(explicacao);
-                explicadorRepository.save(explicador);
-                alunoRepository.save(aluno);
-                return ResponseEntity.ok(explicacao);
-            }
-        }
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<MarcarAtendimentoDTO> marcaAtendimento(@RequestBody MarcarAtendimentoDTO explicacao){
+        Optional<Explicacao> optionalExplicacao=explicacaoService.marcarAtendimento(explicacao.converter());
+        return optionalExplicacao.map(value -> ResponseEntity.ok(converterExplicacaoParaDTO.converter(value))).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 }

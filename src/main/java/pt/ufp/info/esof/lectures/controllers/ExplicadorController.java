@@ -3,53 +3,52 @@ package pt.ufp.info.esof.lectures.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import pt.ufp.info.esof.lectures.models.Disponibilidade;
+import pt.ufp.info.esof.lectures.dtos.conversores.ConverterExplicadorParaDTO;
+import pt.ufp.info.esof.lectures.dtos.DisponibilidadeCreateDTO;
+import pt.ufp.info.esof.lectures.dtos.ExplicadorCreateDTO;
+import pt.ufp.info.esof.lectures.dtos.ExplicadorResponseDTO;
 import pt.ufp.info.esof.lectures.models.Explicador;
-import pt.ufp.info.esof.lectures.repositories.ExplicadorRepository;
+import pt.ufp.info.esof.lectures.services.ExplicadorService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/explicador")
 public class ExplicadorController {
-    private final ExplicadorRepository explicadorRepository;
+    private final ExplicadorService explicadorService;
+    private final ConverterExplicadorParaDTO converterExplicadorParaDTO=new ConverterExplicadorParaDTO();
 
-    public ExplicadorController(ExplicadorRepository explicadorRepository) {
-        this.explicadorRepository = explicadorRepository;
+    public ExplicadorController(ExplicadorService explicadorService) {
+        this.explicadorService = explicadorService;
     }
 
     @GetMapping()
-    public ResponseEntity<Iterable<Explicador>> getAllExplicador(){
-        return ResponseEntity.ok(explicadorRepository.findAll());
+    public ResponseEntity<Iterable<ExplicadorResponseDTO>> getAllExplicador(){
+        List<ExplicadorResponseDTO> responseDTOS=new ArrayList<>();
+        explicadorService.findAll().forEach(explicador -> responseDTOS.add(converterExplicadorParaDTO.converter(explicador)));
+        return ResponseEntity.ok(responseDTOS);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Explicador> getExplicadorById(@PathVariable Long id){
-        Optional<Explicador> optionalExplicador=explicadorRepository.findById(id);
-        return optionalExplicador.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ExplicadorResponseDTO> getExplicadorById(@PathVariable Long id){
+        Optional<Explicador> optionalExplicador=explicadorService.findById(id);
+        return optionalExplicador.map(explicador -> {
+            ExplicadorResponseDTO explicadorResponseDTO=converterExplicadorParaDTO.converter(explicador);
+            return ResponseEntity.ok(explicadorResponseDTO);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Explicador> createExplicador(@RequestBody Explicador explicador){
-        Optional<Explicador> optionalExplicador=explicadorRepository.findByEmail(explicador.getEmail());
-        if(optionalExplicador.isEmpty()){
-           return ResponseEntity.ok(explicadorRepository.save(explicador));
-        }
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<ExplicadorResponseDTO> createExplicador(@RequestBody ExplicadorCreateDTO explicador){
+        Optional<Explicador> optionalExplicador=explicadorService.createExplicador(explicador.converter());
+        return optionalExplicador.map(value -> ResponseEntity.ok(converterExplicadorParaDTO.converter(value))).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @PatchMapping("/{explicadorId}")
-    public ResponseEntity<Explicador> adicionaDisponibilidade(@PathVariable Long explicadorId, @RequestBody Disponibilidade disponibilidade){
-        Optional<Explicador> optionalExplicador=this.explicadorRepository.findById(explicadorId);
-        if(optionalExplicador.isPresent()){
-            Explicador explicador=optionalExplicador.get();
-            int quantidadeDeDisponibilidadesAntes=explicador.getDisponibilidades().size();
-            explicador.adicionaDisponibilidade(disponibilidade);
-            int quantidadedeDisponibilidadesDepois=explicador.getDisponibilidades().size();
-            if(quantidadeDeDisponibilidadesAntes!=quantidadedeDisponibilidadesDepois) {
-                return ResponseEntity.ok(explicador);
-            }
-        }
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<ExplicadorResponseDTO> adicionaDisponibilidade(@PathVariable Long explicadorId, @RequestBody DisponibilidadeCreateDTO disponibilidade){
+        Optional<Explicador> optionalExplicador=explicadorService.adicionaDisponibilidade(explicadorId,disponibilidade.converter());
+        return optionalExplicador.map(explicador -> ResponseEntity.ok(converterExplicadorParaDTO.converter(explicador))).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 }

@@ -58,7 +58,7 @@ public class Inicializacao implements ApplicationListener<ContextRefreshedEvent>
         engenhariaCivil.setNome("Engenharia Civil");
 
         Cadeira matematica=new Cadeira();
-        matematica.setNome("Matemática");
+        matematica.setNome("Matematica");
 
         Cadeira fisica=new Cadeira();
         fisica.setNome("Física");
