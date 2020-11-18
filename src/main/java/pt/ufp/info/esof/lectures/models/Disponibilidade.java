@@ -10,17 +10,12 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
-@Entity
 @EqualsAndHashCode
 public class Disponibilidade {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private DayOfWeek diaDaSemana;
     private LocalTime horaInicio;
     private LocalTime horaFim;
-
-    @ManyToOne
     @EqualsAndHashCode.Exclude
     private Explicador explicador;
 

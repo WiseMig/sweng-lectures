@@ -12,14 +12,10 @@ import java.util.List;
 
 @Getter
 @Setter
-@Entity
 @EqualsAndHashCode(callSuper = true)
 public class Aluno extends Utilizador{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany(mappedBy = "aluno")
-    private final List<Explicacao> explicacoes=new ArrayList<>();
+    private List<Explicacao> explicacoes=new ArrayList<>();
 
     public void addExplicacao(Explicacao explicacao){
         if(!this.explicacoes.contains(explicacao)){

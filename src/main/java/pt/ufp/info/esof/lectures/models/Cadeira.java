@@ -7,17 +7,12 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 public class Cadeira {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
-    @ManyToOne
     private Curso curso;
-    @ManyToMany
     private List<Explicador> explicadores=new ArrayList<>();
 
     public void adicionaExplicador(Explicador explicador) {

@@ -10,17 +10,11 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
-@Entity
 @EqualsAndHashCode
 public class Explicacao {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDateTime hora;
-
-    @ManyToOne
     private Explicador explicador;
-    @ManyToOne
     private Aluno aluno;
 
     public boolean temMarcacaoPrevia(Explicacao explicacao){

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd"
+                 version="2.1">
+
+    <package>pt.ufp.info.esof.lectures.models</package>
+    <entity class="Disponibilidade">
+        <table name="disponibilidade"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="diaDaSemana">
+                <column name="diaDaSemana"/>
+            </basic>
+            <basic name="horaInicio">
+                <column name="horaInicio"/>
+            </basic>
+            <many-to-one name="explicador">
+            </many-to-one>
+        </attributes>
+    </entity>
+    <entity class="Explicador">
+        <table name="explicador"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <one-to-many name="disponibilidades" mapped-by="explicador" >
+                <cascade><cascade-all/></cascade>
+            </one-to-many>
+            <many-to-many name="cadeiras" mapped-by="explicadores"/>
+            <one-to-many name="explicacoes" mapped-by="explicador"/>
+        </attributes>
+    </entity>
+    <entity class="Explicacao">
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <many-to-one name="explicador"/>
+            <many-to-one name="aluno"/>
+        </attributes>
+    </entity>
+
+    <entity class="Aluno">
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <one-to-many name="explicacoes" mapped-by="aluno"/>
+        </attributes>
+    </entity>
+
+    <entity class="Cadeira">
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <many-to-many name="explicadores"/>
+            <many-to-one name="curso"/>
+        </attributes>
+    </entity>
+    <entity class="Curso">
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <one-to-many name="cadeiras" mapped-by="curso">
+                <cascade><cascade-all/></cascade>
+            </one-to-many>
+            <many-to-one name="faculdade"/>
+        </attributes>
+    </entity>
+
+    <entity class="Faculdade">
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <one-to-many name="cursos" mapped-by="faculdade">
+                <cascade><cascade-all/></cascade>
+            </one-to-many>
+        </attributes>
+    </entity>
+
+</entity-mappings>

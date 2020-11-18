@@ -10,18 +10,12 @@ import java.util.List;
 
 @Getter
 @Setter
-@Entity
 @EqualsAndHashCode(callSuper = true)
 public class Explicador extends Utilizador{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
-    @ManyToMany(mappedBy = "explicadores")
     private List<Cadeira> cadeiras=new ArrayList<>();
-    @OneToMany(mappedBy = "explicador",cascade = CascadeType.ALL)
     private List<Disponibilidade> disponibilidades=new ArrayList<>();
-    @OneToMany(mappedBy = "explicador",cascade = CascadeType.ALL)
     private List<Explicacao> explicacoes=new ArrayList<>();
 
     public Explicacao adicionarExplicacao(Explicacao explicacao){
