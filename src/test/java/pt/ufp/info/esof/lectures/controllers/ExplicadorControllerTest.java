@@ -85,7 +85,7 @@ class ExplicadorControllerTest {
         Explicador explicadorExistente=new Explicador();
         explicadorExistente.setEmail("explicador@mail.com");
         String explicadorExistenteAsJsonString=new ObjectMapper().writeValueAsString(explicadorExistente);
-        when(this.explicadorRepository.findByEmail("explicador@mail.com")).thenReturn(explicadorExistente);
+        when(this.explicadorRepository.findByEmail("explicador@mail.com")).thenReturn(Optional.of(explicadorExistente));
 
         mockMvc.perform(post("/explicador").content(explicadorExistenteAsJsonString).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
 
@@ -93,8 +93,6 @@ class ExplicadorControllerTest {
 
     @Test
     public void adicionaDisponibilidade() throws Exception {
-
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
         Explicador explicador=new Explicador();
         explicador.setEmail("novoexplicador@mail.com");

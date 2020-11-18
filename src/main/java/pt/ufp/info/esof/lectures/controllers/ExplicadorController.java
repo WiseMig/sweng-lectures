@@ -26,15 +26,13 @@ public class ExplicadorController {
     @GetMapping("/{id}")
     public ResponseEntity<Explicador> getExplicadorById(@PathVariable Long id){
         Optional<Explicador> optionalExplicador=explicadorRepository.findById(id);
-        if(optionalExplicador.isPresent()){
-            return ResponseEntity.ok(optionalExplicador.get());
-        }
-        return ResponseEntity.notFound().build();
+        return optionalExplicador.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public ResponseEntity<Explicador> createExplicador(@RequestBody Explicador explicador){
-        if(explicadorRepository.findByEmail(explicador.getEmail())==null){
+        Optional<Explicador> optionalExplicador=explicadorRepository.findByEmail(explicador.getEmail());
+        if(optionalExplicador.isEmpty()){
            return ResponseEntity.ok(explicadorRepository.save(explicador));
         }
         return ResponseEntity.badRequest().build();

@@ -10,7 +10,6 @@ import pt.ufp.info.esof.lectures.models.Aluno;
 import pt.ufp.info.esof.lectures.models.Explicacao;
 import pt.ufp.info.esof.lectures.models.Explicador;
 import pt.ufp.info.esof.lectures.repositories.AlunoRepository;
-import pt.ufp.info.esof.lectures.repositories.ExplicacaoRepository;
 import pt.ufp.info.esof.lectures.repositories.ExplicadorRepository;
 
 import java.util.Optional;
@@ -20,13 +19,11 @@ import java.util.Optional;
 public class ExplicacaoController {
 
     private final ExplicadorRepository explicadorRepository;
-    private final ExplicacaoRepository explicacaoRepository;
     private final AlunoRepository alunoRepository;
 
     @Autowired
-    public ExplicacaoController(ExplicadorRepository explicadorRepository, ExplicacaoRepository explicacaoRepository, AlunoRepository alunoRepository) {
+    public ExplicacaoController(ExplicadorRepository explicadorRepository, AlunoRepository alunoRepository) {
         this.explicadorRepository = explicadorRepository;
-        this.explicacaoRepository = explicacaoRepository;
         this.alunoRepository = alunoRepository;
     }
 

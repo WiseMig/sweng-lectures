@@ -45,9 +45,6 @@ class ExplicacaoControllerTest {
     @Test
     void marcaAtendimento() throws Exception {
 
-        //https://www.baeldung.com/jackson-serialize-dates
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
         Aluno aluno=new Aluno();
         aluno.setId(1L);
 

@@ -28,8 +28,9 @@ class ExplicadorRepositoryTest {
 
     @Test
     public void testaCriacaoExplicador(){
+        String explicadorEmail="explicador@gmail.com";
         Explicador explicador=new Explicador();
-        explicador.setEmail("explicador@gmail.com");
+        explicador.setEmail(explicadorEmail);
 
         Disponibilidade disponibilidade=new Disponibilidade();
 
@@ -66,8 +67,8 @@ class ExplicadorRepositoryTest {
 
         assertEquals(1,explicadorRepository.count());
         assertEquals(1,disponibilidadeRepository.count());
-        assertNotNull(explicadorRepository.findByEmail("explicador@gmail.com"));
-        assertNull(explicadorRepository.findByEmail("invalid email"));
+        assertTrue(explicadorRepository.findByEmail(explicadorEmail).isPresent());
+
 
         assertEquals(1,explicacaoRepository.count());
 
