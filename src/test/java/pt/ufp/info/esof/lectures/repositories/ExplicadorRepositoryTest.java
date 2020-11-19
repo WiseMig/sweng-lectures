@@ -55,6 +55,7 @@ class ExplicadorRepositoryTest {
 
         aluno.addExplicacao(explicacao);
         explicador.adicionarExplicacao(explicacao);
+        assertEquals(1,explicador.getExplicacoes().size());
 
         assertEquals(0,explicadorRepository.count());
         assertEquals(0,disponibilidadeRepository.count());
@@ -64,6 +65,7 @@ class ExplicadorRepositoryTest {
         explicadorRepository.save(explicador);
         assertNotNull(explicador.getId());
         assertNotNull(disponibilidade.getId());
+
 
         assertEquals(1,explicadorRepository.count());
         assertEquals(1,disponibilidadeRepository.count());

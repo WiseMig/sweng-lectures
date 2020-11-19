@@ -30,8 +30,8 @@
             <one-to-many name="disponibilidades" mapped-by="explicador" >
                 <cascade><cascade-all/></cascade>
             </one-to-many>
-            <many-to-many name="cadeiras" mapped-by="explicadores"/>
-            <one-to-many name="explicacoes" mapped-by="explicador"/>
+            <many-to-many name="cadeiras" mapped-by="explicadores"><cascade><cascade-merge/></cascade></many-to-many>
+            <one-to-many name="explicacoes" mapped-by="explicador"><cascade><cascade-all/></cascade></one-to-many>
         </attributes>
     </entity>
     <entity class="Explicacao">
@@ -84,5 +84,8 @@
             </one-to-many>
         </attributes>
     </entity>
+    <mapped-superclass class="Utilizador">
+
+    </mapped-superclass>
 
 </entity-mappings>
