@@ -1,6 +1,5 @@
 package pt.ufp.info.esof.lectures.models;
 
-import edu.princeton.cs.algorithms.EdgeWeightedDigraph;
 import lombok.Getter;
 import lombok.Setter;
 
