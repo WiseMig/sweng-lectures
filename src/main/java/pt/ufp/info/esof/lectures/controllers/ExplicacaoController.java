@@ -1,5 +1,7 @@
 package pt.ufp.info.esof.lectures.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +17,8 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/explicacao")
 public class ExplicacaoController {
+
+
 
     private final ExplicacaoService explicacaoService;
     private final ConverterExplicacaoParaDTO converterExplicacaoParaDTO=new ConverterExplicacaoParaDTO();

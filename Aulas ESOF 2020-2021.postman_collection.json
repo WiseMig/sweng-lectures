@@ -1,0 +1,162 @@
+{
+	"info": {
+		"_postman_id": "27834b2f-ca52-4b90-a276-9696c1a79421",
+		"name": "Aulas ESOF 2020/2021",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET /Explicador antes POST /Explicador",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4936415d-3d72-4fa0-b089-339c56e6dd83",
+						"exec": [
+							"pm.test(\"Lê todos explicadores antes de criar 1 novo\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.length).to.eql(1);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/explicador",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"explicador"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /Explicador Inicial",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "baa80c56-6e3a-41dc-a62c-c95928d8c0c2",
+						"exec": [
+							"pm.test(\"Cria 1 explicador\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nome\":\"explicador2\",\r\n    \"email\":\"explicador2@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/explicador",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"explicador"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /Explicador mal-sucedido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2631cd7e-3257-4aae-ab6d-4b19c4f2d52c",
+						"exec": [
+							"pm.test(\"Repete criação de explicador que já existe\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nome\":\"explicador2\",\r\n    \"email\":\"explicador2@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/explicador",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"explicador"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /Explicador após POST /Explicador",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4936415d-3d72-4fa0-b089-339c56e6dd83",
+						"exec": [
+							"pm.test(\"Lê todos explicadores antes de criar 1 novo\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.length).to.eql(2);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/explicador",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"explicador"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

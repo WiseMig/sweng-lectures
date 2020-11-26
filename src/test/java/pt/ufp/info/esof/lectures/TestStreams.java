@@ -19,5 +19,7 @@ public class TestStreams {
             list.parallelStream().forEach(System.out::print);
             System.out.println();
         }
+
+        list.stream().filter(integer -> integer%2==0).map(integer -> integer*10).forEach(System.out::println);
     }
 }

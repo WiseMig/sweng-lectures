@@ -3,6 +3,10 @@ package pt.ufp.info.esof.lectures;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.SneakyThrows;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -21,6 +25,8 @@ import java.util.Collections;
 @Component
 public class Inicializacao implements ApplicationListener<ContextRefreshedEvent> {
 
+    Logger logger= LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private ExplicadorRepository explicadorRepository;
     @Autowired
@@ -33,7 +39,8 @@ public class Inicializacao implements ApplicationListener<ContextRefreshedEvent>
     @SneakyThrows
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        System.out.println("\n\n\nInicializou\n\n\n");
+
+        logger.info("\n\n\nInicializou\n\n\n");
 
         Faculdade fct=new Faculdade();
         fct.setNome("FCT");
