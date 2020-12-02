@@ -4,6 +4,7 @@ import pt.ufp.info.esof.lectures.bridge.destino.Entrega;
 import pt.ufp.info.esof.lectures.bridge.destino.EntregaAsia;
 import pt.ufp.info.esof.lectures.bridge.destino.EntregaEuropa;
 import pt.ufp.info.esof.lectures.bridge.destino.EntregaPT;
+import pt.ufp.info.esof.lectures.bridge.prioridade.Emergencial;
 import pt.ufp.info.esof.lectures.bridge.prioridade.Expresso;
 import pt.ufp.info.esof.lectures.bridge.prioridade.Normal;
 
@@ -32,5 +33,7 @@ public class Cliente {
         entrega =new EntregaAsia(new Expresso());
         System.out.println(entrega.custo(order));
 
+        entrega=new EntregaPT(new Emergencial());
+        System.out.println(entrega.custo(order));
     }
 }
