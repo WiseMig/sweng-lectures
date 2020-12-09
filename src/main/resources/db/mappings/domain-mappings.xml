@@ -4,7 +4,7 @@
                  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd"
                  version="2.1">
 
-    <package>pt.ufp.info.esof.lectures.models</package>
+    <package>pt.ufp.info.esof.lectures.project.models</package>
     <entity class="Disponibilidade">
         <table name="disponibilidade"/>
         <attributes>
