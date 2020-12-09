@@ -3,7 +3,7 @@ package pt.ufp.info.esof.lectures.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import pt.ufp.info.esof.lectures.dtos.conversores.ConverterExplicadorParaDTO;
+import pt.ufp.info.esof.lectures.dtos.DTOStaticFactory;
 import pt.ufp.info.esof.lectures.dtos.DisponibilidadeCreateDTO;
 import pt.ufp.info.esof.lectures.dtos.ExplicadorCreateDTO;
 import pt.ufp.info.esof.lectures.dtos.ExplicadorResponseDTO;
@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequestMapping("/explicador")
 public class ExplicadorController {
     private final ExplicadorService explicadorService;
-    private final ConverterExplicadorParaDTO converterExplicadorParaDTO=new ConverterExplicadorParaDTO();
+    private final DTOStaticFactory dtoStaticFactory=DTOStaticFactory.getInstance();
 
     public ExplicadorController(ExplicadorService explicadorService) {
         this.explicadorService = explicadorService;
@@ -27,7 +27,7 @@ public class ExplicadorController {
     @GetMapping()
     public ResponseEntity<Iterable<ExplicadorResponseDTO>> getAllExplicador(){
         List<ExplicadorResponseDTO> responseDTOS=new ArrayList<>();
-        explicadorService.findAll().forEach(explicador -> responseDTOS.add(converterExplicadorParaDTO.converter(explicador)));
+        explicadorService.findAll().forEach(explicador -> responseDTOS.add(dtoStaticFactory.explicadorResponseDTO(explicador)));
         return ResponseEntity.ok(responseDTOS);
     }
 
@@ -35,7 +35,7 @@ public class ExplicadorController {
     public ResponseEntity<ExplicadorResponseDTO> getExplicadorById(@PathVariable Long id){
         Optional<Explicador> optionalExplicador=explicadorService.findById(id);
         return optionalExplicador.map(explicador -> {
-            ExplicadorResponseDTO explicadorResponseDTO=converterExplicadorParaDTO.converter(explicador);
+            ExplicadorResponseDTO explicadorResponseDTO=dtoStaticFactory.explicadorResponseDTO(explicador);
             return ResponseEntity.ok(explicadorResponseDTO);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -43,12 +43,12 @@ public class ExplicadorController {
     @PostMapping
     public ResponseEntity<ExplicadorResponseDTO> createExplicador(@RequestBody ExplicadorCreateDTO explicador){
         Optional<Explicador> optionalExplicador=explicadorService.createExplicador(explicador.converter());
-        return optionalExplicador.map(value -> ResponseEntity.ok(converterExplicadorParaDTO.converter(value))).orElseGet(() -> ResponseEntity.badRequest().build());
+        return optionalExplicador.map(value -> ResponseEntity.ok(dtoStaticFactory.explicadorResponseDTO(value))).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @PatchMapping("/{explicadorId}")
     public ResponseEntity<ExplicadorResponseDTO> adicionaDisponibilidade(@PathVariable Long explicadorId, @RequestBody DisponibilidadeCreateDTO disponibilidade){
         Optional<Explicador> optionalExplicador=explicadorService.adicionaDisponibilidade(explicadorId,disponibilidade.converter());
-        return optionalExplicador.map(explicador -> ResponseEntity.ok(converterExplicadorParaDTO.converter(explicador))).orElseGet(() -> ResponseEntity.badRequest().build());
+        return optionalExplicador.map(explicador -> ResponseEntity.ok(dtoStaticFactory.explicadorResponseDTO(explicador))).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 }
